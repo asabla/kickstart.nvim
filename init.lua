@@ -273,6 +273,9 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Enable relative numbers
+vim.o.relativenumber = true
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -280,8 +283,9 @@ vim.o.termguicolors = true
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 
 -- Remap for dealing with word wrap
-vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+-- Commented out for now, causing some weird binding bugs for jklö
+-- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+-- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
@@ -349,6 +353,23 @@ local function live_grep_git_root()
     })
   end
 end
+
+-- Removes current bindnings for hjkl
+vim.keymap.set({ 'n', 'v'}, 'h', '<Nop>')
+vim.keymap.set({ 'n', 'v'}, 'j', '<Nop>')
+vim.keymap.set({ 'n', 'v'}, 'k', '<Nop>')
+vim.keymap.set({ 'n', 'v'}, 'l', '<Nop>')
+
+-- re-bind from hjkl into jklö and making it a bit easier for swe keyboards
+local opts = { noremap = true }
+vim.keymap.set({ 'n', 'v'}, 'j', '<Left>', opts)
+vim.keymap.set({ 'n', 'v'}, 'k', '<Down>', opts)
+vim.keymap.set({ 'n', 'v'}, 'l', '<Up>', opts)
+vim.keymap.set({ 'n', 'v'}, 'ö', '<Right>', opts)
+
+-- Make handling indentation a bit easier
+vim.keymap.set('v', '<S-Tab>', '<gv', opts)
+vim.keymap.set('v', '<Tab>', '>gv', opts)
 
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
