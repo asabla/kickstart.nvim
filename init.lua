@@ -185,7 +185,12 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim', opts = {
+    -- Toggle in NORMAL mode
+    opleader = {
+      line = '<C-k><C-k>',
+    }
+  }},
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -276,6 +281,14 @@ vim.o.termguicolors = true
 -- Enable relative numbers
 vim.o.relativenumber = true
 
+-- indentation settings
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
+vim.o.smartindent = true
+
+-- disable wordwrap
+vim.o.wrap = false
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -354,6 +367,10 @@ local function live_grep_git_root()
   end
 end
 
+-- Read more stuff here:
+-- more about netrw
+-- https://vonheikemen.github.io/devlog/tools/using-netrw-vim-builtin-file-explorer/
+
 -- Removes current bindnings for hjkl
 vim.keymap.set({ 'n', 'v'}, 'h', '<Nop>')
 vim.keymap.set({ 'n', 'v'}, 'j', '<Nop>')
@@ -370,6 +387,10 @@ vim.keymap.set({ 'n', 'v'}, 'ö', '<Right>', opts)
 -- Make handling indentation a bit easier
 vim.keymap.set('v', '<S-Tab>', '<gv', opts)
 vim.keymap.set('v', '<Tab>', '>gv', opts)
+
+-- Better text jumping (will centralize view after jumping)
+vim.keymap.set('n', '<C-d>', '<C-d>zz', opts)
+vim.keymap.set('n', '<C-u>', '<C-u>zz', opts)
 
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
