@@ -46,7 +46,9 @@ vim.g.maplocalleader = ' '
 
 
 -- Configure netrw stuff
-vim.g.netrw_keepdir=0     -- Makes moving files easier to use
+-- vim.g.netrw_keepdir = 1     -- Makes moving files easier to use
+vim.g.netrw_keepdir = 0
+-- vim.g.netrw_localmovecmd = 'mv'
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
@@ -197,6 +199,24 @@ require('lazy').setup({
     opts = {},
   },
 
+  -- {
+  --   -- context treesitter (makes it easier to understand where you are)
+  --   'nvim-treesitter/nvim-treesitter-context', opts = {
+  --     enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+  --     max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+  --     min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
+  --     line_numbers = true,
+  --     multiline_threshold = 20, -- Maximum number of lines to show for a single context
+  --     trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
+  --     mode = 'cursor',  -- Line used to calculate context. Choices: 'cursor', 'topline'
+  --     -- Separator between context and content. Should be a single character string, like '-'.
+  --     -- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
+  --     separator = nil,
+  --     zindex = 20, -- The Z-index of the context window
+  --     on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attach_mappings
+  --   }
+  -- },
+
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {
     -- Toggle in NORMAL mode
@@ -322,8 +342,6 @@ vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 -- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Diagnostic keymaps
--- vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
--- vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>cp', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
 vim.keymap.set('n', '<leader>cn', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
@@ -420,9 +438,16 @@ vim.keymap.set({ 'n', 'v'}, 'ö', '<Right>', opts)
 vim.keymap.set('v', '<S-Tab>', '<gv', opts)
 vim.keymap.set('v', '<Tab>', '>gv', opts)
 
+vim.keymap.set('v', 'K', ":m '>+1<CR>gv=gv", opts)
+vim.keymap.set('v', 'L', ":m '<-2<CR>gv=gv", opts)
+
 -- Better text jumping (will centralize view after jumping)
 vim.keymap.set('n', '<C-d>', '<C-d>zz', opts)
 vim.keymap.set('n', '<C-u>', '<C-u>zz', opts)
+
+-- Same thing but when searching
+vim.keymap.set('n', 'n', 'nzzzv', opts)
+vim.keymap.set('n', 'N', 'Nzzzv', opts)
 
 vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
@@ -437,6 +462,7 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
+vim.keymap.set('n', '<C-p>', require('telescope.builtin').git_files)
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
