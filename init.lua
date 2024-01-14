@@ -335,23 +335,6 @@ vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldnestmax = 99
 
--- [[ Basic Keymaps ]]
-
--- Keymaps for better default experience
--- See `:help vim.keymap.set()`
-vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
-
--- Remap for dealing with word wrap
--- Commented out for now, causing some weird binding bugs for jklö
--- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
--- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-
--- Diagnostic keymaps
-vim.keymap.set('n', '<leader>cp', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
-vim.keymap.set('n', '<leader>cn', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
-
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
@@ -422,9 +405,16 @@ local function live_grep_git_root()
   end
 end
 
--- Read more stuff here:
--- more about netrw
--- https://vonheikemen.github.io/devlog/tools/using-netrw-vim-builtin-file-explorer/
+
+-- [[ Basic Keymaps ]]
+-- Keymaps for better default experience
+-- See `:help vim.keymap.set()`
+vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+
+-- Remap for dealing with word wrap
+-- Commented out for now, causing some weird binding bugs for jklö
+-- vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+-- vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Removes current bindnings for hjkl
 vim.keymap.set({ 'n', 'v'}, 'h', '<Nop>')
@@ -470,9 +460,20 @@ vim.keymap.set('n', '<leader>/', function()
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
     winblend = 10,
     previewer = false,
+    layout_config = {
+      width = 0.80,
+      height = 0.80,
+    },
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
+-- Diagnostic keymaps
+vim.keymap.set('n', '<leader>cp', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
+vim.keymap.set('n', '<leader>cn', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+-- Telescope keymaps
 vim.keymap.set('n', '<C-p>', require('telescope.builtin').git_files)
 vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
@@ -483,17 +484,13 @@ vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by 
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
--- Copilot stuff
--- Undbinds in case there are any conflicts
+-- CoPilot keymaps
 vim.keymap.set({ 'n', 'v', 'i' }, '<M-m>', '<Nop>')
 vim.keymap.set({ 'n', 'v', 'i' }, '<M-n>', '<Nop>')
-
--- Bind copilot stuff
 vim.keymap.set('n', '<M-m>', require('copilot.suggestion').accept, { desc = 'Accept current suggestion' })
--- vim.keymap.set('n', '<M-CR>', require('copilot.suggestion').accept, { desc = 'Accept current suggestion' })
 vim.keymap.set('n', '<M-n>', require('copilot.suggestion').next, { desc = 'Show next suggestion' })
 
--- Trouble bindnings
+-- Trouble keymaps
 vim.keymap.set("n", "<leader>tt", function() require("trouble").toggle() end, { desc = '[T]oggle [T]rouble' })
 vim.keymap.set("n", "<leader>tw", function() require("trouble").toggle("workspace_diagnostics") end, { desc = '[T]oggle [W]orkspace diagnostic' })
 vim.keymap.set("n", "<leader>td", function() require("trouble").toggle("document_diagnostics") end, { desc = '[T]oggle [D]ocument diagnostic' })
@@ -518,6 +515,11 @@ vim.defer_fn(function()
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
+
+    -- Not sure if this is actually needed or not, but it gets rid of warnings
+    sync_install = true,
+    ignore_install = {},
+    modules = {},
 
     highlight = { enable = true },
     indent = { enable = true },
@@ -583,7 +585,7 @@ local on_attach = function(_, bufnr)
   -- NOTE: Remember that lua is a real programming language, and as such it is possible
   -- to define small helper and utility functions so you don't have to repeat yourself
   -- many times.
-  --
+
   -- In this case, we create a function that lets us more easily define mappings specific
   -- for LSP related items. It sets the mode, buffer and description for us each time.
   local nmap = function(keys, func, desc)
@@ -663,8 +665,6 @@ local servers = {
     },
   },
 
-  -- TODO: Add trouble to the configuration
-  -- ref: https://github.com/folke/trouble.nvim
   -- TODO: replace omnisharp with csharp-language-server
   -- ref: https://github.com/razzmatazz/csharp-language-server
   omnisharp = { filetypes = { 'cs', 'razor' } }
