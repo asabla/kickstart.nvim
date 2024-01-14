@@ -275,7 +275,7 @@ require('lazy').setup({
 -- NOTE: You can change these options as you wish!
 
 -- Enable highlight by default
-vim.o.syntax = true
+--vim.o.syntax = true
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -489,6 +489,22 @@ vim.keymap.set({ 'n', 'v', 'i' }, '<M-m>', '<Nop>')
 vim.keymap.set({ 'n', 'v', 'i' }, '<M-n>', '<Nop>')
 vim.keymap.set('n', '<M-m>', require('copilot.suggestion').accept, { desc = 'Accept current suggestion' })
 vim.keymap.set('n', '<M-n>', require('copilot.suggestion').next, { desc = 'Show next suggestion' })
+
+-- Git keymaps
+vim.keymap.set('n', '<leader>gs', ':G<cr>', { desc = '[G]it [S]tatus' })
+vim.keymap.set('n', '<leader>gc', ':G commit<cr>', { desc = '[G]it [C]ommit' })
+vim.keymap.set('n', '<leader>gp', ':G push<cr>', { desc = '[G]it [P]ush' })
+vim.keymap.set('n', '<leader>gl', ':G pull<cr>', { desc = '[G]it [L]ull' })
+vim.keymap.set('n', '<leader>gb', ':G blame<cr>', { desc = '[G]it [B]lame' })
+vim.keymap.set('n', '<leader>gd', ':G diff<cr>', { desc = '[G]it [D]iff' })
+vim.keymap.set('n', '<leader>gD', ':G diff --cached<cr>', { desc = '[G]it [D]iff [C]ached' })
+vim.keymap.set('n', '<leader>gj', ':diffget //3<cr>', { desc = '[G]it [J]ump to [C]onflict' })
+vim.keymap.set('n', '<leader>gk', ':diffget //2<cr>', { desc = '[G]it [K]eep [C]onflict' })
+vim.keymap.set('n', '<leader>gr', ':G rebase<cr>', { desc = '[G]it [R]ebase' })
+vim.keymap.set('n', '<leader>gR', ':G rebase --continue<cr>', { desc = '[G]it [R]ebase [C]ontinue' })
+vim.keymap.set('n', '<leader>gq', ':G rebase --quit<cr>', { desc = '[G]it [R]ebase [Q]uit' })
+vim.keymap.set('n', '<leader>ga', ':G rebase --abort<cr>', { desc = '[G]it [R]ebase [A]bort' })
+vim.keymap.set('n', '<leader>gS', ':G stash<cr>', { desc = '[G]it [S]tash' })
 
 -- Trouble keymaps
 vim.keymap.set("n", "<leader>tt", function() require("trouble").toggle() end, { desc = '[T]oggle [T]rouble' })
