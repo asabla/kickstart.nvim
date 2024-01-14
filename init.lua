@@ -267,7 +267,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -319,8 +319,13 @@ vim.o.relativenumber = true
 
 -- indentation settings
 vim.o.tabstop = 4
-vim.o.shiftwidth = 4
+-- vim.o.shiftwidth = 4
 vim.o.smartindent = true
+
+vim.o.shiftwidth = 0
+vim.o.softtabstop = -1
+vim.o.expandtab = true
+vim.o.autoindent = true
 
 -- disable wordwrap
 vim.o.wrap = false
@@ -434,6 +439,12 @@ vim.keymap.set({ 'n', 'v'}, 'k', '<Down>', opts)
 vim.keymap.set({ 'n', 'v'}, 'l', '<Up>', opts)
 vim.keymap.set({ 'n', 'v'}, 'ö', '<Right>', opts)
 
+-- re-bind window navigation
+vim.keymap.set({ 'n', 'v'}, '<C-w>j', '<C-w><Left>', opts)
+vim.keymap.set({ 'n', 'v'}, '<C-w>k', '<C-w><Down>', opts)
+vim.keymap.set({ 'n', 'v'}, '<C-w>l', '<C-w><Up>', opts)
+vim.keymap.set({ 'n', 'v'}, '<C-w>ö', '<C-w><Right>', opts)
+
 -- Make handling indentation a bit easier
 vim.keymap.set('v', '<S-Tab>', '<gv', opts)
 vim.keymap.set('v', '<Tab>', '>gv', opts)
@@ -472,6 +483,12 @@ vim.keymap.set('n', '<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by 
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
+-- Copilot stuff
+vim.keymap.set({ 'n', 'v', 'i' }, '<M-m>', '<Nop>')
+vim.keymap.set({ 'n', 'v', 'i' }, '<M-n>', '<Nop>')
+vim.keymap.set('n', '<M-m>', require('copilot.suggestion').accept, { desc = 'Accept current suggestion' })
+vim.keymap.set('n', '<M-n>', require('copilot.suggestion').next, { desc = 'Show next suggestion' })
+
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
@@ -479,10 +496,11 @@ vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = {
-      'c', 'cpp', 'c_sharp',
+      'c', 'cpp', 'c_sharp', 'rust',
       'go', 'lua',
       'python',
-      'rust', 'tsx',
+      'dockerfile', 'yaml', 'toml',
+      'html', 'css', 'json', 'tsx',
       'javascript', 'typescript',
       'vimdoc', 'vim', 'bash'
     },
@@ -632,6 +650,12 @@ local servers = {
       telemetry = { enable = false },
     },
   },
+
+  -- TODO: Add trouble to the configuration
+  -- ref: https://github.com/folke/trouble.nvim
+  -- TODO: replace omnisharp with csharp-language-server
+  -- ref: https://github.com/razzmatazz/csharp-language-server
+  omnisharp = { filetypes = { 'cs', 'razor' } }
 }
 
 -- Setup neovim lua configuration
