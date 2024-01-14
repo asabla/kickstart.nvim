@@ -484,17 +484,21 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
 
 -- Copilot stuff
+-- Undbinds in case there are any conflicts
 vim.keymap.set({ 'n', 'v', 'i' }, '<M-m>', '<Nop>')
 vim.keymap.set({ 'n', 'v', 'i' }, '<M-n>', '<Nop>')
+
+-- Bind copilot stuff
 vim.keymap.set('n', '<M-m>', require('copilot.suggestion').accept, { desc = 'Accept current suggestion' })
+-- vim.keymap.set('n', '<M-CR>', require('copilot.suggestion').accept, { desc = 'Accept current suggestion' })
 vim.keymap.set('n', '<M-n>', require('copilot.suggestion').next, { desc = 'Show next suggestion' })
 
 -- Trouble bindnings
-vim.keymap.set("n", "<leader>xx", function() require("trouble").toggle() end, { desc = 'Toggle trouble' })
-vim.keymap.set("n", "<leader>xw", function() require("trouble").toggle("workspace_diagnostics") end, { desc = 'Toggle workspace diagnostic' })
-vim.keymap.set("n", "<leader>xd", function() require("trouble").toggle("document_diagnostics") end, { desc = 'Toggle document diagnostic' })
-vim.keymap.set("n", "<leader>xq", function() require("trouble").toggle("quickfix") end, { desc = 'Toggle quickfix' })
-vim.keymap.set("n", "<leader>xl", function() require("trouble").toggle("loclist") end, { desc = 'Toggle loclist' })
+vim.keymap.set("n", "<leader>tt", function() require("trouble").toggle() end, { desc = '[T]oggle [T]rouble' })
+vim.keymap.set("n", "<leader>tw", function() require("trouble").toggle("workspace_diagnostics") end, { desc = '[T]oggle [W]orkspace diagnostic' })
+vim.keymap.set("n", "<leader>td", function() require("trouble").toggle("document_diagnostics") end, { desc = '[T]oggle [D]ocument diagnostic' })
+vim.keymap.set("n", "<leader>tq", function() require("trouble").toggle("quickfix") end, { desc = '[T]oggle [Q]uickfix' })
+vim.keymap.set("n", "<leader>tl", function() require("trouble").toggle("loclist") end, { desc = '[T]oggle [L]oclist' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -628,7 +632,7 @@ require('which-key').register {
   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-  ['<leader>x'] = { name = '[X]trouble', _ = 'which_key_ignore' },
+  ['<leader>t'] = { name = '[T]rouble', _ = 'which_key_ignore' },
 }
 
 -- mason-lspconfig requires that these setup functions are called in this order
